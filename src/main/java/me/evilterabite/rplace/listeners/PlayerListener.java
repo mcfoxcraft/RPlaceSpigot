@@ -6,6 +6,7 @@ import me.evilterabite.rplace.events.PlayerEnterCanvasEvent;
 import me.evilterabite.rplace.events.PlayerLeaveCanvasEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -19,18 +20,25 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     void onPlayerMove(PlayerMoveEvent event) {
-        if(RPlace.canvas == null) return;
+        if(RPlace.canvas == null || !movedBlock(event.getFrom(), event.getTo()))
+            return;
+
         Player player = event.getPlayer();
-        if(RPlace.canvasZone.getWorld() != player.getWorld()) return;
-        if(!RPlace.playersInCanvas.contains(player.getUniqueId())) {
-            if(RPlace.canvasZone.contains(player.getLocation())) {
-                Bukkit.getPluginManager().callEvent(new PlayerEnterCanvasEvent(player));
-            }
-        } else {
-            if(!RPlace.canvasZone.contains(player.getLocation())) {
-                Bukkit.getPluginManager().callEvent(new PlayerLeaveCanvasEvent(player));
-            }
+        if(RPlace.canvasZone.getWorld() != player.getWorld())
+            return;
+        
+        boolean inCanvas = RPlace.canvasZone.contains(event.getTo());
+        if(inCanvas && !RPlace.playersInCanvas.contains(player.getUniqueId())) {
+            Bukkit.getPluginManager().callEvent(new PlayerEnterCanvasEvent(player));
+        } else if(!inCanvas && RPlace.playersInCanvas.contains(player.getUniqueId())) {
+            Bukkit.getPluginManager().callEvent(new PlayerLeaveCanvasEvent(player));
         }
+    }
+
+    private boolean movedBlock(Location from, Location to) {
+        return from.getBlockX() != to.getBlockX() ||
+                from.getBlockY() != to.getBlockY() ||
+                from.getBlockZ() != to.getBlockZ();
     }
 
     @EventHandler
