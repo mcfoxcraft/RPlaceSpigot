@@ -33,6 +33,8 @@ public final class RPlace extends JavaPlugin {
     public static ArrayList<Material> whitelistedBlocks;
     public static boolean updateAvailable;
 
+    private DataStorage dataStorage;
+
     @Override
     public void onEnable() {
         canvasGUI = new CanvasGUI();
@@ -40,6 +42,9 @@ public final class RPlace extends JavaPlugin {
         whitelistedBlocks = new ArrayList<>();
         playersInCanvas = new ArrayList<>();
         timedPlayers = new ArrayList<>();
+
+        this.dataStorage = new DataStorage();
+
         registerCommands();
         registerListeners();
 
@@ -48,8 +53,6 @@ public final class RPlace extends JavaPlugin {
         checkForUpdates();
 
         saveDefaultConfig();
-
-
     }
 
     @Override
@@ -74,6 +77,10 @@ public final class RPlace extends JavaPlugin {
         pm.registerEvents(new CanvasListener(), this);
         pm.registerEvents(new CanvasCommand(), this);
         pm.registerEvents(new BlockListener(), this);
+    }
+
+    public DataStorage getDataStorage() {
+        return dataStorage;
     }
 
     public static RPlace getInstance() {

@@ -5,12 +5,15 @@ import me.evilterabite.rplace.events.PlayerEnterCanvasEvent;
 import me.evilterabite.rplace.events.PlayerLeaveCanvasEvent;
 import me.evilterabite.rplace.utils.C;
 import me.evilterabite.rplace.utils.ItemCreator;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -49,16 +52,31 @@ public class CanvasListener implements Listener {
     }
 
     public static void storePlayerContents(Player player) {
-        playerInventoryMap.put(player.getUniqueId(), player.getInventory().getContents());
-        if(player.getInventory().getArmorContents().length != 0) {
-            playerArmourMap.put(player.getUniqueId(), player.getInventory().getArmorContents());
-        }
+        ItemStack[] invContents = player.getInventory().getContents();
+        ItemStack[] armorContents = player.getInventory().getArmorContents();
+
+        playerInventoryMap.put(player.getUniqueId(), invContents);
+        playerArmourMap.put(player.getUniqueId(), armorContents);
         player.getInventory().clear();
+
+        // Also save the inventory data to persistent storage
+        // This isn't used normally, but is needed in case of server crashes
+        // to be able to restore player inventories
+        Bukkit.getScheduler().runTaskAsynchronously(RPlace.getInstance(), () ->
+                RPlace.getInstance().getDataStorage().storeInventory(player.getUniqueId(), invContents, armorContents));
+
+        // This key is checked when a player joins the server. It will be removed
+        // on a proper exit (when a player gets their inventory back). If it's still
+        // there at that point, it means the player needs to get their inventory
+        // restored, which will be done from the data in persistent storage.
+        player.getPersistentDataContainer().set(getRestoreKey(), PersistentDataType.BYTE, (byte) 0x01);
     }
 
     public static void restorePlayerContents(Player player) {
         if(RPlace.canvas == null)
             return;
+
+        player.getPersistentDataContainer().remove(getRestoreKey());
 
         ItemStack[] invContents = playerInventoryMap.get(player.getUniqueId());
         if(invContents != null) {
@@ -72,4 +90,9 @@ public class CanvasListener implements Listener {
             playerArmourMap.remove(player.getUniqueId());
         }
     }
+
+    public static NamespacedKey getRestoreKey() {
+        return new NamespacedKey(RPlace.getInstance(), "inventory_restore_needed");
+    }
+
 }

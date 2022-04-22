@@ -8,25 +8,45 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.*;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.logging.Level;
 
 public class PlayerListener implements Listener {
 
     @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        PersistentDataContainer pdc = player.getPersistentDataContainer();
+
+        if(pdc.has(CanvasListener.getRestoreKey(), PersistentDataType.BYTE)) {
+            pdc.remove(CanvasListener.getRestoreKey());
+            RPlace.getInstance().getLogger().warning("The inventory of " + player.getName() + " wasn't restored properly when they left the server! Attempting to load it from persistent storage now.");
+
+            if(RPlace.getInstance().getDataStorage().restoreInventory(player)) {
+                RPlace.getInstance().getLogger().info("Restore successful!");
+            } else {
+                RPlace.getInstance().getLogger().severe("Could not restore!");
+            }
+        }
+    }
+
+    @EventHandler
     void onPlayerMove(PlayerMoveEvent event) {
-        if(RPlace.canvas == null || !movedBlock(event.getFrom(), event.getTo()))
+        if(RPlace.canvas == null || event.getTo() == null || !movedBlock(event.getFrom(), event.getTo()))
             return;
 
         Player player = event.getPlayer();
         if(RPlace.canvasZone.getWorld() != player.getWorld())
             return;
-        
+
         boolean inCanvas = RPlace.canvasZone.contains(event.getTo());
         if(inCanvas && !RPlace.playersInCanvas.contains(player.getUniqueId())) {
             Bukkit.getPluginManager().callEvent(new PlayerEnterCanvasEvent(player));
@@ -44,7 +64,6 @@ public class PlayerListener implements Listener {
     @EventHandler
     void onPlayerDisconnect(PlayerQuitEvent event) {
         if(RPlace.playersInCanvas.contains(event.getPlayer().getUniqueId())) {
-            CanvasListener.restorePlayerContents(event.getPlayer());
             Bukkit.getPluginManager().callEvent(new PlayerLeaveCanvasEvent(event.getPlayer()));
         }
     }
