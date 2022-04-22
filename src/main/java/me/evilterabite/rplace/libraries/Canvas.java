@@ -82,9 +82,10 @@ public class Canvas {
     }
 
     public void store() {
-        RPlace.getInstance().getConfig().set("place_timer", placeBlockTimer);
-        RPlace.getPlugin(RPlace.class).getConfig().set("canvas", this.toString());
-        RPlace.getPlugin(RPlace.class).saveConfig();
+        RPlace plugin = RPlace.getInstance();
+        plugin.getConfig().set("place_timer", placeBlockTimer);
+        plugin.getConfig().set("canvas", this.toString());
+        plugin.saveConfig();
     }
 
     public static Canvas deserialize(String serializedCanvas) {

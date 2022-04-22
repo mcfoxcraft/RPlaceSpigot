@@ -55,9 +55,10 @@ public final class RPlace extends JavaPlugin {
     @Override
     public void onDisable() {
         for(Player player : Bukkit.getOnlinePlayers()) {
-            CanvasListener.restorePlayerContents(player);
+            if(playersInCanvas.contains(player.getUniqueId())) {
+                CanvasListener.restorePlayerContents(player);
+            }
         }
-        getLogger().log(Level.FINE, "Restored Player Inventories");
 
         canvas.store();
     }

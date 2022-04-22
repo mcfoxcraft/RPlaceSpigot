@@ -35,13 +35,16 @@ public class CanvasListener implements Listener {
 
     @EventHandler
     void onLeaveCanvas(PlayerLeaveCanvasEvent event) {
-        if(RPlace.canvas == null) return;
-        RPlace.playersInCanvas.remove(event.getPlayer().getUniqueId());
+        if(RPlace.canvas == null)
+            return;
 
-        restorePlayerContents(event.getPlayer());
-        event.getPlayer().sendMessage(C.canvasLeave());
+        Player player = event.getPlayer();
+        RPlace.playersInCanvas.remove(player.getUniqueId());
+        restorePlayerContents(player);
+
+        player.sendMessage(C.canvasLeave());
         if(C.invisPlayer()) {
-            event.getPlayer().setInvisible(false);
+            player.setInvisible(false);
         }
     }
 
@@ -54,13 +57,19 @@ public class CanvasListener implements Listener {
     }
 
     public static void restorePlayerContents(Player player) {
-        if(RPlace.canvas == null) return;
-        player.getInventory().clear();
-        if(playerInventoryMap.containsKey(player.getUniqueId())) {
-            player.getInventory().setContents(playerInventoryMap.get(player.getUniqueId()));
+        if(RPlace.canvas == null)
+            return;
+
+        ItemStack[] invContents = playerInventoryMap.get(player.getUniqueId());
+        if(invContents != null) {
+            player.getInventory().setContents(invContents);
+            playerInventoryMap.remove(player.getUniqueId());
         }
-        if(playerArmourMap.containsKey(player.getUniqueId())) {
-            player.getInventory().setArmorContents(playerArmourMap.get(player.getUniqueId()));
+
+        ItemStack[] armorContents = playerArmourMap.get(player.getUniqueId());
+        if(armorContents != null) {
+            player.getInventory().setArmorContents(armorContents);
+            playerArmourMap.remove(player.getUniqueId());
         }
     }
 }
