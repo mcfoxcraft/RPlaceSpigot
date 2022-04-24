@@ -17,6 +17,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.UUID;
@@ -43,6 +44,11 @@ public final class RPlace extends JavaPlugin {
         playersInCanvas = new ArrayList<>();
         timedPlayers = new ArrayList<>();
 
+        if(!new File(this.getDataFolder(), "config.yml").exists()) {
+            this.saveDefaultConfig();
+            this.reloadConfig();
+        }
+
         this.dataStorage = new DataStorage();
 
         registerCommands();
@@ -51,8 +57,6 @@ public final class RPlace extends JavaPlugin {
         loadWhitelistedBlocks();
         loadCanvas();
         checkForUpdates();
-
-        saveDefaultConfig();
     }
 
     @Override
@@ -65,7 +69,9 @@ public final class RPlace extends JavaPlugin {
             RPlace.getInstance().getDataStorage().removeFile(player);
         }
 
-        canvas.store();
+        if(canvas != null) {
+            canvas.store();
+        }
     }
 
     private void registerCommands() {

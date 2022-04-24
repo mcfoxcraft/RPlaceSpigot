@@ -39,12 +39,24 @@ public class C {
         return ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(config.getString("msg_canvasleave")));
     }
 
+    public static String canvasEnterOther() {
+        return ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(config.getString("msg_canvasenter_other")));
+    }
+
+    public static String canvasLeaveOther() {
+        return ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(config.getString("msg_canvasleave_other")));
+    }
+
     public static String noTeleport() {
         return ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(config.getString("msg_noteleport")));
     }
 
     public static boolean canvasEnterLeaveMessageEnabled() {
         return config.getBoolean("canvas_enter_leave_message");
+    }
+
+    public static boolean canvasEnterLeaveMessageOtherEnabled() {
+        return config.getBoolean("canvas_enter_leave_message_other");
     }
 
     public static boolean timerOutsideCanvas() {

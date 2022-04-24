@@ -26,18 +26,26 @@ public class CanvasListener implements Listener {
 
     @EventHandler
     void onEnterCanvas(PlayerEnterCanvasEvent event) {
-        if(RPlace.canvas == null) return;
-        RPlace.playersInCanvas.add(event.getPlayer().getUniqueId());
-        storePlayerContents(event.getPlayer());
+        if(RPlace.canvas == null)
+            return;
+
+        Player player = event.getPlayer();
+        RPlace.playersInCanvas.add(player.getUniqueId());
+        storePlayerContents(player);
 
         if(C.canvasEnterLeaveMessageEnabled()) {
-            event.getPlayer().sendMessage(C.canvasEnter());
+            player.sendMessage(C.canvasEnter());
+        }
+
+        if(C.canvasEnterLeaveMessageOtherEnabled()) {
+            this.sendMessageToOthers(player, C.canvasEnterOther().replace("{name}", player.getName()));
         }
 
         if(C.invisPlayer()) {
-            event.getPlayer().setInvisible(true);
+            player.setInvisible(true);
         }
-        event.getPlayer().getInventory().setItem(0, paletteItem);
+
+        player.getInventory().setItem(0, paletteItem);
     }
 
     @EventHandler
@@ -53,9 +61,19 @@ public class CanvasListener implements Listener {
             player.sendMessage(C.canvasLeave());
         }
 
+        if(C.canvasEnterLeaveMessageOtherEnabled()) {
+            this.sendMessageToOthers(player, C.canvasLeaveOther().replace("{name}", player.getName()));
+        }
+
         if(C.invisPlayer()) {
             player.setInvisible(false);
         }
+    }
+
+    private void sendMessageToOthers(Player except, String message) {
+        Bukkit.getOnlinePlayers().stream()
+                .filter(player -> RPlace.playersInCanvas.contains(player.getUniqueId()) && player != except)
+                .forEach(player -> player.sendMessage(message));
     }
 
     public static void storePlayerContents(Player player) {

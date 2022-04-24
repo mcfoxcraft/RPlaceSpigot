@@ -33,10 +33,13 @@ msg_insidefromoutsideofcanvas: "&cYou cannot place blocks inside the canvas from
 msg_canvasenter: "&aYou entered the canvas!"
 msg_canvasleave: "&cYou left the canvas!"
 msg_noteleport: "&cPlease leave the canvas before teleporting out."
+msg_canvasenter_other: "&a{name} entered the canvas!"
+msg_canvasleave_other: "&c{name} left the canvas!"
 
 
 show_timer_outside_canvas: true
 canvas_enter_leave_message: true
+canvas_enter_leave_message_other: true
 
 ##Do not touch this unless you know what you are doing!
 canvas: "null"
