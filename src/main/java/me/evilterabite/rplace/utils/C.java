@@ -43,6 +43,10 @@ public class C {
         return ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(config.getString("msg_noteleport")));
     }
 
+    public static boolean canvasEnterLeaveMessageEnabled() {
+        return config.getBoolean("canvas_enter_leave_message");
+    }
+
     public static boolean timerOutsideCanvas() {
         return config.getBoolean("show_timer_outside_canvas");
     }

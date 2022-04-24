@@ -29,7 +29,11 @@ public class CanvasListener implements Listener {
         if(RPlace.canvas == null) return;
         RPlace.playersInCanvas.add(event.getPlayer().getUniqueId());
         storePlayerContents(event.getPlayer());
-        event.getPlayer().sendMessage(C.canvasEnter());
+
+        if(C.canvasEnterLeaveMessageEnabled()) {
+            event.getPlayer().sendMessage(C.canvasEnter());
+        }
+
         if(C.invisPlayer()) {
             event.getPlayer().setInvisible(true);
         }
@@ -45,7 +49,10 @@ public class CanvasListener implements Listener {
         RPlace.playersInCanvas.remove(player.getUniqueId());
         restorePlayerContents(player);
 
-        player.sendMessage(C.canvasLeave());
+        if(C.canvasEnterLeaveMessageEnabled()) {
+            player.sendMessage(C.canvasLeave());
+        }
+
         if(C.invisPlayer()) {
             player.setInvisible(false);
         }
