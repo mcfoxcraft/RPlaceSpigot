@@ -31,6 +31,10 @@ public class DataStorage {
         return true;
     }
 
+    public void removeFile(Player player) {
+        FileUtil.remove("inventories/" + player.getUniqueId() + ".yml");
+    }
+
     // This is more efficient than directly storing the array
     // because any 'null' item stacks (empty slots) aren't stored
     private void storeItems(ConfigurationSection section, ItemStack[] items) {

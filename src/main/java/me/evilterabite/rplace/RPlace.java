@@ -61,6 +61,8 @@ public final class RPlace extends JavaPlugin {
             if(playersInCanvas.contains(player.getUniqueId())) {
                 CanvasListener.restorePlayerContents(player);
             }
+
+            RPlace.getInstance().getDataStorage().removeFile(player);
         }
 
         canvas.store();

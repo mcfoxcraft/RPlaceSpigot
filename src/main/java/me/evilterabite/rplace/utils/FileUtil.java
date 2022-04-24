@@ -14,7 +14,7 @@ public class FileUtil {
     private FileUtil() {}
 
     public static YamlFile create(String fileName) {
-        File file = new File(RPlace.getInstance().getDataFolder(), fileName);
+        File file = getFile(fileName);
         try {
             if(!file.exists() || !file.isFile()) {
                 file.getParentFile().mkdirs();
@@ -29,7 +29,7 @@ public class FileUtil {
     }
 
     public static YamlFile load(String fileName) {
-        File file = new File(RPlace.getInstance().getDataFolder(), fileName);
+        File file = getFile(fileName);
         FileConfiguration data = new YamlConfiguration();
 
         try {
@@ -42,6 +42,17 @@ public class FileUtil {
             RPlace.getInstance().getLogger().log(Level.SEVERE, "Failed to load " + file.getName(), ex);
             return null;
         }
+    }
+
+    public static void remove(String fileName) {
+        File file = getFile(fileName);
+        if(file.isFile() && !file.delete()) {
+            RPlace.getInstance().getLogger().warning("Failed to delete " + fileName);
+        }
+    }
+
+    private static File getFile(String fileName) {
+        return new File(RPlace.getInstance().getDataFolder(), fileName);
     }
 
     public static class YamlFile {

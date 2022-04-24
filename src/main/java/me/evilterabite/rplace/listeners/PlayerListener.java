@@ -5,10 +5,8 @@ import me.evilterabite.rplace.commands.CanvasCommand;
 import me.evilterabite.rplace.events.PlayerEnterCanvasEvent;
 import me.evilterabite.rplace.events.PlayerLeaveCanvasEvent;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -66,6 +64,8 @@ public class PlayerListener implements Listener {
         if(RPlace.playersInCanvas.contains(event.getPlayer().getUniqueId())) {
             Bukkit.getPluginManager().callEvent(new PlayerLeaveCanvasEvent(event.getPlayer()));
         }
+
+        Bukkit.getScheduler().runTaskAsynchronously(RPlace.getInstance(), () ->  RPlace.getInstance().getDataStorage().removeFile(event.getPlayer()));
     }
 
     @EventHandler
