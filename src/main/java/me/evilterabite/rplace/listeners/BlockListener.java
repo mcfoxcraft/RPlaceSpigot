@@ -67,7 +67,7 @@ public class BlockListener implements Listener {
                                         cancel();
                                         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent());
                                     } else {
-                                        if (RPlace.playersInCanvas.contains(player.getUniqueId())) {
+                                        if (RPlace.playersInCanvas.contains(player.getUniqueId()) || C.timerOutsideCanvas()) {
                                             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(String.format(ChatColor.DARK_BLUE + "%02d:%02d", mins, seconds)));
                                         }
                                         time--;
