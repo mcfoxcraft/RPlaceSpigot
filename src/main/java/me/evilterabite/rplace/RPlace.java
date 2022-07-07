@@ -114,12 +114,15 @@ public final class RPlace extends JavaPlugin {
     }
 
     public void checkForUpdates() {
+        // FOX: disabled update checker
+        /*
         new UpdateChecker(this, 101481).getVersion(version -> {
             updateAvailable = !this.getDescription().getVersion().equals(version);
             if(updateAvailable) {
                 getLogger().log(Level.WARNING, "Update Available! Stay updated to keep your server BUG-FREE!");
             }
         });
+        */
     }
 
     public void loadWhitelistedBlocks() {
