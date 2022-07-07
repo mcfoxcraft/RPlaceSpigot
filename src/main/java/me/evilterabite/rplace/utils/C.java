@@ -51,6 +51,10 @@ public class C {
         return ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(config.getString("msg_noteleport")));
     }
 
+    public static String cannotEnterInCombat() {
+        return ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(config.getString("msg_cannot_enter_in_combat")));
+    }
+
     public static boolean canvasEnterLeaveMessageEnabled() {
         return config.getBoolean("canvas_enter_leave_message");
     }

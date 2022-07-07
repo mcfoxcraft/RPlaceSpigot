@@ -35,7 +35,7 @@ msg_canvasleave: "&cYou left the canvas!"
 msg_noteleport: "&cPlease leave the canvas before teleporting out."
 msg_canvasenter_other: "&a{name} entered the canvas!"
 msg_canvasleave_other: "&c{name} left the canvas!"
-
+msg_cannot_enter_in_combat: "&cYou cannot enter the canvas, as you're in combat."
 
 show_timer_outside_canvas: true
 canvas_enter_leave_message: true

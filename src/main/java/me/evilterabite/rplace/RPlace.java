@@ -2,6 +2,8 @@ package me.evilterabite.rplace;
 
 import me.evilterabite.rplace.commands.CanvasCommand;
 import me.evilterabite.rplace.commands.PaletteCommand;
+import me.evilterabite.rplace.hook.HookHandler;
+import me.evilterabite.rplace.hook.PvPManagerHook;
 import me.evilterabite.rplace.libraries.Canvas;
 import me.evilterabite.rplace.libraries.gui.CanvasGUI;
 import me.evilterabite.rplace.libraries.gui.PaletteGUI;
@@ -48,6 +50,9 @@ public final class RPlace extends JavaPlugin {
             this.saveDefaultConfig();
             this.reloadConfig();
         }
+
+        HookHandler.registerHook("PvPManager", PvPManagerHook.class);
+        HookHandler.loadHooks();
 
         this.dataStorage = new DataStorage();
 

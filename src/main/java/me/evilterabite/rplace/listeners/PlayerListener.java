@@ -4,6 +4,9 @@ import me.evilterabite.rplace.RPlace;
 import me.evilterabite.rplace.commands.CanvasCommand;
 import me.evilterabite.rplace.events.PlayerEnterCanvasEvent;
 import me.evilterabite.rplace.events.PlayerLeaveCanvasEvent;
+import me.evilterabite.rplace.hook.HookHandler;
+import me.evilterabite.rplace.hook.PvPManagerHook;
+import me.evilterabite.rplace.utils.C;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -47,6 +50,12 @@ public class PlayerListener implements Listener {
 
         boolean inCanvas = RPlace.canvasZone.contains(event.getTo());
         if(inCanvas && !RPlace.playersInCanvas.contains(player.getUniqueId())) {
+            if(HookHandler.getHook(PvPManagerHook.class).map(hook -> hook.isInCombat(player)).orElse(false)) {
+                player.sendMessage(C.cannotEnterInCombat());
+                event.setCancelled(true);
+                return;
+            }
+
             Bukkit.getPluginManager().callEvent(new PlayerEnterCanvasEvent(player));
         } else if(!inCanvas && RPlace.playersInCanvas.contains(player.getUniqueId())) {
             Bukkit.getPluginManager().callEvent(new PlayerLeaveCanvasEvent(player));
